@@ -2,7 +2,7 @@ import json
 import numpy as np
 from models.van_laar import VanLaarModel
 from models.wilson import WilsonModel
-from utils.plot import generate_compositions, compute_gammas, save_to_csv, plot_ternary_surface
+from utils.plot import generate_compositions, compute_gammas, save_to_csv, plot_ternary_surface, plot_activity_surface
 
 def load_params():
     """
@@ -92,10 +92,15 @@ def main():
     csv_filename = f"{model_name}_output.csv"
     save_to_csv(compositions, gammas, filename=csv_filename)
 
-    # Plot ternary surfaces if mixture is ternary
-    if len(x) == 3:
-        for i in range(3):
-            plot_ternary_surface(compositions, gammas, component_index=i)
+    # # Plot ternary surfaces if mixture is ternary
+    # if len(x) == 3:
+    #     for i in range(3):
+    #         plot_ternary_surface(compositions, gammas, component_index=i)
+
+    # Works for binary and ternary automatically
+    for i in range(len(x)):
+        plot_activity_surface(compositions, gammas, component_index=i)
+
 
 
 if __name__ == "__main__":
