@@ -1,5 +1,3 @@
-# main.py
-
 import json
 import numpy as np
 from models.van_laar import VanLaarModel
@@ -16,21 +14,13 @@ def load_params():
 
     converted = {}
 
-    # # Van Laar
-    # if "van_laar" in raw:
-    #     A = {}
-    #     for k, v in raw["van_laar"]["A"].items():
-    #         i, j = map(int, k.split(","))
-    #         A[(i, j)] = v
-    #     converted["van_laar"] = {"A": A}
-
+    # Van Laar
     if "van_laar" in raw:
         A = {}
         for k, v in raw["van_laar"]["A"].items():
             i, j = map(int, k.split(","))
-            A[(i,j)] = v
+            A[(i, j)] = v
         converted["van_laar"] = {"A": A}
-
 
     # Wilson
     if "wilson" in raw:
@@ -41,8 +31,6 @@ def load_params():
         converted["wilson"] = {"Lambda": Lambda}
 
     return converted
-
-
 
 
 def choose_model():
@@ -74,37 +62,41 @@ def main():
     params = load_params()
     choice = choose_model()
 
+    # Select model
     if choice == "1":
         model = VanLaarModel(params["van_laar"])
+        model_name = "van_laar"
     elif choice == "2":
         model = WilsonModel(params["wilson"])
+        model_name = "wilson"
     else:
         print("Model not implemented yet.")
         return
 
-    # Get any number of components
+    # Get mole fractions from user
     x = get_mole_fractions()
 
-    # Compute activity coefficients
+    # Compute activity coefficients for user input
     gamma = model.gamma(x)
-
     print("\nActivity coefficients:")
     for i, g in enumerate(gamma, start=1):
         print(f"γ{i} = {g:.4f}")
 
-    # Generate a grid of compositions for N components
+    # Generate a grid of compositions
     compositions = generate_compositions(len(x), points=20)
 
-    # Compute gamma values
+    # Compute gamma values for grid
     gammas = compute_gammas(model, compositions)
 
-    # Save to CSV
-    save_to_csv(compositions, gammas, filename="wilson_output.csv")
+    # Save results to dynamic CSV file
+    csv_filename = f"{model_name}_output.csv"
+    save_to_csv(compositions, gammas, filename=csv_filename)
 
-    # For ternary mixtures, plot surfaces
+    # Plot ternary surfaces if mixture is ternary
     if len(x) == 3:
         for i in range(3):
             plot_ternary_surface(compositions, gammas, component_index=i)
+
 
 if __name__ == "__main__":
     main()
