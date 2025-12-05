@@ -6,34 +6,49 @@ from models.base_model import BaseModel
 class VanLaarModel(BaseModel):
     """
     Van Laar model for activity coefficients.
-    Parameters must contain A_ij values for all pairs in a ternary mixture.
+    Parameters:
+        A: dictionary of pairwise Van Laar parameters, keys are (i,j) tuples
+           for N components. Example: {(1,2): 1.2, (2,1): 0.9, ...}
     """
 
-    def gamma(self, x):
+    def gamma(self, x, epsilon=1e-12):
+        """
+        Compute activity coefficients for any number of components safely.
+        
+        x: list or array of mole fractions, length N
+        epsilon: small value to avoid division by zero
+        
+        Returns: array of gamma values
+        """
         x = np.array(x)
-        n = len(x)
-        A = self.params["A"]   # A is a dictionary {("1","2"): value, ...}
+        N = len(x)
+        A = self.params["A"]  # {(i,j): value} with integer tuples
 
-        ln_gamma = np.zeros(n)
+        gamma = np.zeros(N)
 
-        for i in range(n):
-            numerator_terms = []
-            denom_terms = []
+        for i in range(N):
+            sum_terms = 0.0
 
-            for k in range(n):
-                if k != i:
-                    Aik = A[(str(i+1), str(k+1))]
-                    denom_terms.append(Aik * x[k])
+            for j in range(N):
+                if j == i:
+                    continue
 
-            denom = sum(denom_terms)
+                # Access pairwise parameters
+                try:
+                    Aij = A[(i+1, j+1)]
+                    Aji = A[(j+1, i+1)]
+                except KeyError:
+                    raise KeyError(f"Missing Van Laar parameter for pair ({i+1},{j+1})")
 
-            # sum over j != i
-            for j in range(n):
-                if j != i:
-                    Aij = A[(str(i+1), str(j+1))]
-                    Aji = A[(str(j+1), str(i+1))]
+                # Compute denominator safely
+                denom = sum(A[(k+1, j+1)] * x[k] for k in range(N) if k != j)
+                if denom < epsilon:
+                    denom = epsilon  # prevent division by zero
 
-                    term = Aij * (Aji * x[j] / denom) ** 2
-                    ln_gamma[i] += term
+                # Add term to gamma sum
+                sum_terms += Aij * ((Aji * x[j]) / denom) ** 2
 
-        return np.exp(ln_gamma)
+            # Compute gamma[i]
+            gamma[i] = np.exp(sum_terms)
+
+        return gamma

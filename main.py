@@ -16,13 +16,21 @@ def load_params():
 
     converted = {}
 
-    # Van Laar
+    # # Van Laar
+    # if "van_laar" in raw:
+    #     A = {}
+    #     for k, v in raw["van_laar"]["A"].items():
+    #         i, j = map(int, k.split(","))
+    #         A[(i, j)] = v
+    #     converted["van_laar"] = {"A": A}
+
     if "van_laar" in raw:
         A = {}
         for k, v in raw["van_laar"]["A"].items():
             i, j = map(int, k.split(","))
-            A[(i, j)] = v
+            A[(i,j)] = v
         converted["van_laar"] = {"A": A}
+
 
     # Wilson
     if "wilson" in raw:
@@ -66,10 +74,9 @@ def main():
     params = load_params()
     choice = choose_model()
 
-    # Only Van Laar implemented for now
     if choice == "1":
         model = VanLaarModel(params["van_laar"])
-    if choice == "2":
+    elif choice == "2":
         model = WilsonModel(params["wilson"])
     else:
         print("Model not implemented yet.")
