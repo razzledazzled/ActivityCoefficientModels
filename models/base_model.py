@@ -18,8 +18,8 @@ class BaseModel(ABC):
     @abstractmethod
     def gamma(self, x):
         """
-        Compute activity coefficients γ_i for a mixture.
+        Compute activity coefficients Y_i for a mixture.
         x is an array-like composition vector [x1, x2, x3].
-        Returns array of γ_i.
+        Returns array of Y_i.
         """
         pass
