@@ -56,7 +56,7 @@ def save_to_csv(compositions, gammas, filename="output.csv"):
     df.to_csv(filename, index=False)
     print(f"Saved results to {filename}")
 
-def plot_activity_surface(compositions, gammas, component_index=0):
+def plot_activity_surface(compositions, gammas, model_name="", component_index=0):
     """
     Plot activity coefficients for binary or ternary mixtures.
 
@@ -73,7 +73,7 @@ def plot_activity_surface(compositions, gammas, component_index=0):
         plt.plot(comps[:,0], gam, marker='o')
         plt.xlabel("x1")
         plt.ylabel(f"γ{component_index+1}")
-        plt.title(f"Binary mixture: γ{component_index+1} vs x1")
+        plt.title(f"{model_name} – Binary: γ{component_index+1} vs x1")
         plt.grid(True)
         plt.show()
 
@@ -85,14 +85,14 @@ def plot_activity_surface(compositions, gammas, component_index=0):
         ax.set_xlabel("x1")
         ax.set_ylabel("x2")
         ax.set_zlabel(f"γ{component_index+1}")
-        ax.set_title(f"Ternary surface for γ{component_index+1}")
+        ax.set_title(f"{model_name} – Ternary surface for γ{component_index+1}")
         plt.show()
 
     else:
         print(f"Plotting not implemented for N={N} components. Use slices or projections.")
 
 
-def plot_combined_ternary(compositions, gammas):
+def plot_combined_ternary(compositions, gammas, model_name=""):
     """
     Plot all three activity coefficient surfaces in ONE 3D plot.
     """
@@ -116,7 +116,7 @@ def plot_combined_ternary(compositions, gammas):
     ax.set_xlabel("x1")
     ax.set_ylabel("x2")
     ax.set_zlabel("γ")
-    ax.set_title("Combined Ternary Activity Coefficients")
+    ax.set_title(f"{model_name} – Combined Ternary Activity Coefficients")
 
     ax.legend()
     plt.show()
