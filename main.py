@@ -11,6 +11,7 @@ from utils.plot import (
     compute_gammas,
     save_to_csv,
     plot_activity_surface,
+    plot_combined_binary,
     plot_combined_ternary
 )
 
@@ -132,14 +133,22 @@ def main():
 
         # Plotting
         if len(x) == 3:
+        # Ternary → one combined 3D plot
             plot_combined_ternary(compositions, gammas, model_name=model_name)
+
+        elif len(x) == 2:
+        # Binary → one combined 2D plot
+            plot_combined_binary(compositions, gammas, model_name=model_name)
+
         else:
+        # Fallback for >3 components
             for i in range(len(x)):
                 plot_activity_surface(
                     compositions, gammas,
                     model_name=model_name,
                     component_index=i
                 )
+
 
 
 if __name__ == "__main__":

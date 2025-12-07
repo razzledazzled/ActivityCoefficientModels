@@ -91,6 +91,27 @@ def plot_activity_surface(compositions, gammas, model_name="", component_index=0
     else:
         print(f"Plotting not implemented for N={N} components. Use slices or projections.")
 
+def plot_combined_binary(compositions, gammas, model_name=""):
+    """
+    Plot all activity coefficients on one 2D plot for binary systems.
+    """
+    comps = np.array(compositions)
+    gam = np.array(gammas)
+
+    x1 = comps[:, 0]
+
+    plt.figure(figsize=(8,6))
+
+    plt.plot(x1, gam[:, 0], label="γ1")
+    plt.plot(x1, gam[:, 1], label="γ2")
+
+    plt.xlabel("x1")
+    plt.ylabel("γ")
+    plt.title(f"{model_name} – Binary Activity Coefficients")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
 
 def plot_combined_ternary(compositions, gammas, model_name=""):
     """
