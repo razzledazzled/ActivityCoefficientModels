@@ -5,42 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from itertools import product
 
-def plot_activity_surface(compositions, gammas, component_index=0):
-    """
-    Plot activity coefficients for binary or ternary mixtures.
 
-    - Binary (N=2): 2D line plot (x1 vs Y)
-    - Ternary (N=3): 3D scatter plot (x1, x2, Y)
-    """
-    comps = np.array(compositions)
-    gam = np.array(gammas)[:, component_index]
-    N = comps.shape[1]
-
-    if N == 2:
-        # Binary mixture → 2D line plot
-        plt.figure(figsize=(7,5))
-        plt.plot(comps[:,0], gam, marker='o')
-        plt.xlabel("x1")
-        plt.ylabel(f"γ{component_index+1}")
-        plt.title(f"Binary mixture: γ{component_index+1} vs x1")
-        plt.grid(True)
-        plt.show()
-
-    elif N == 3:
-        # Ternary mixture → 3D scatter plot
-        fig = plt.figure(figsize=(8,6))
-        ax = fig.add_subplot(111, projection='3d')
-        ax.scatter(comps[:,0], comps[:,1], gam, c=gam, cmap='viridis')
-        ax.set_xlabel("x1")
-        ax.set_ylabel("x2")
-        ax.set_zlabel(f"γ{component_index+1}")
-        ax.set_title(f"Ternary surface for γ{component_index+1}")
-        plt.show()
-
-    else:
-        print(f"Plotting not implemented for N={N} components. Use slices or projections.")
-
-def generate_compositions(N, points=20):
+def generate_compositions(N, points=30):
     """
     Generate evenly spaced compositions for N components.
     For N=2, returns linearly spaced fractions.
@@ -90,26 +56,40 @@ def save_to_csv(compositions, gammas, filename="output.csv"):
     df.to_csv(filename, index=False)
     print(f"Saved results to {filename}")
 
-
-def plot_ternary_surface(compositions, gammas, component_index=0):
+def plot_activity_surface(compositions, gammas, component_index=0):
     """
-    Plot a 3D surface for a ternary mixture.
-    component_index: which γ component to plot
-    """
-    from mpl_toolkits.mplot3d import Axes3D
+    Plot activity coefficients for binary or ternary mixtures.
 
+    - Binary (N=2): 2D line plot (x1 vs Y)
+    - Ternary (N=3): 3D scatter plot (x1, x2, Y)
+    """
     comps = np.array(compositions)
     gam = np.array(gammas)[:, component_index]
+    N = comps.shape[1]
 
-    fig = plt.figure(figsize=(8,6))
-    ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(comps[:,0], comps[:,1], gam, c=gam, cmap='viridis')
-    ax.set_xlabel("x1")
-    ax.set_ylabel("x2")
-    ax.set_zlabel(f"γ{component_index+1}")
-    ax.set_title(f"Ternary surface for γ{component_index+1}")
-    plt.show()
+    if N == 2:
+        # Binary mixture → 2D line plot
+        plt.figure(figsize=(7,5))
+        plt.plot(comps[:,0], gam, marker='o')
+        plt.xlabel("x1")
+        plt.ylabel(f"γ{component_index+1}")
+        plt.title(f"Binary mixture: γ{component_index+1} vs x1")
+        plt.grid(True)
+        plt.show()
 
+    elif N == 3:
+        # Ternary mixture → 3D scatter plot
+        fig = plt.figure(figsize=(8,6))
+        ax = fig.add_subplot(111, projection='3d')
+        ax.scatter(comps[:,0], comps[:,1], gam, c=gam, cmap='viridis')
+        ax.set_xlabel("x1")
+        ax.set_ylabel("x2")
+        ax.set_zlabel(f"γ{component_index+1}")
+        ax.set_title(f"Ternary surface for γ{component_index+1}")
+        plt.show()
+
+    else:
+        print(f"Plotting not implemented for N={N} components. Use slices or projections.")
 
 
 def plot_combined_ternary(compositions, gammas):
@@ -139,4 +119,26 @@ def plot_combined_ternary(compositions, gammas):
     ax.set_title("Combined Ternary Activity Coefficients")
 
     ax.legend()
+    plt.show()
+
+
+##Unused
+
+def plot_ternary_surface(compositions, gammas, component_index=0):
+    """
+    Plot a 3D surface for a ternary mixture.
+    component_index: which γ component to plot
+    """
+    from mpl_toolkits.mplot3d import Axes3D
+
+    comps = np.array(compositions)
+    gam = np.array(gammas)[:, component_index]
+
+    fig = plt.figure(figsize=(8,6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(comps[:,0], comps[:,1], gam, c=gam, cmap='viridis')
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    ax.set_zlabel(f"γ{component_index+1}")
+    ax.set_title(f"Ternary surface for γ{component_index+1}")
     plt.show()

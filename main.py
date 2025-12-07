@@ -2,6 +2,8 @@ import json
 import numpy as np
 from models.van_laar import VanLaarModel
 from models.wilson import WilsonModel
+from models.nrtl import NRTLModel
+from models.uniquac import UNIQUACModel
 from utils.plot import generate_compositions, compute_gammas, save_to_csv, plot_ternary_surface, plot_activity_surface, plot_combined_ternary
 
 def load_params():
@@ -30,6 +32,28 @@ def load_params():
             Lambda[(i, j)] = v
         converted["wilson"] = {"Lambda": Lambda}
 
+    # --- NRTL ---
+    if "nrtl" in raw:
+        tau = {}
+        alpha = {}
+        for k, v in raw["nrtl"]["tau"].items():
+            i, j = map(int, k.split(","))
+            tau[(i, j)] = v
+        for k, v in raw["nrtl"]["alpha"].items():
+            i, j = map(int, k.split(","))
+            alpha[(i, j)] = v
+        converted["nrtl"] = {"tau": tau, "alpha": alpha}
+
+    # --- UNIQUAC ---
+    if "uniquac" in raw:
+        r = {int(k): v for k, v in raw["uniquac"]["r"].items()}
+        q = {int(k): v for k, v in raw["uniquac"]["q"].items()}
+        a = {}
+        for k, v in raw["uniquac"]["a"].items():
+            i, j = map(int, k.split(","))
+            a[(i, j)] = v
+        converted["uniquac"] = {"r": r, "q": q, "a": a}
+
     return converted
 
 
@@ -37,9 +61,9 @@ def choose_model():
     print("Choose activity coefficient model:")
     print("1. Van Laar")
     print("2. Wilson")
-    print("3. NRTL (coming soon)")
-    print("4. UNIQUAC (coming soon)")
-    print("5. All Modesls (Coming Soon)")
+    print("3. NRTL")
+    print("4. UNIQUAC")
+    print("5. All Models (Coming Soon)")
     return input("Enter number: ")
 
 
@@ -70,6 +94,13 @@ def main():
     elif choice == "2":
         model = WilsonModel(params["wilson"])
         model_name = "wilson"
+    elif choice == "3":
+        model = NRTLModel(params["nrtl"])
+        model_name = "nrtl"
+    elif choice == "4":
+        model = UNIQUACModel(params["uniquac"])
+        model_name = "uniquac"
+
     else:
         print("Model not implemented yet.")
         return
