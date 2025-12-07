@@ -9,8 +9,8 @@ def plot_activity_surface(compositions, gammas, component_index=0):
     """
     Plot activity coefficients for binary or ternary mixtures.
 
-    - Binary (N=2): 2D line plot (x1 vs γ)
-    - Ternary (N=3): 3D scatter plot (x1, x2, γ)
+    - Binary (N=2): 2D line plot (x1 vs Y)
+    - Ternary (N=3): 3D scatter plot (x1, x2, Y)
     """
     comps = np.array(compositions)
     gam = np.array(gammas)[:, component_index]
@@ -108,4 +108,35 @@ def plot_ternary_surface(compositions, gammas, component_index=0):
     ax.set_ylabel("x2")
     ax.set_zlabel(f"γ{component_index+1}")
     ax.set_title(f"Ternary surface for γ{component_index+1}")
+    plt.show()
+
+
+
+def plot_combined_ternary(compositions, gammas):
+    """
+    Plot all three activity coefficient surfaces in ONE 3D plot.
+    """
+    from mpl_toolkits.mplot3d import Axes3D
+
+    comps = np.array(compositions)
+    gam = np.array(gammas)
+
+    fig = plt.figure(figsize=(9,7))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # γ1
+    ax.scatter(comps[:,0], comps[:,1], gam[:,0], color='red', alpha=0.5, label='γ1')
+
+    # γ2
+    ax.scatter(comps[:,0], comps[:,1], gam[:,1], color='blue', alpha=0.5, label='γ2')
+
+    # γ3
+    ax.scatter(comps[:,0], comps[:,1], gam[:,2], color='green', alpha=0.5, label='γ3')
+
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    ax.set_zlabel("γ")
+    ax.set_title("Combined Ternary Activity Coefficients")
+
+    ax.legend()
     plt.show()

@@ -2,7 +2,7 @@ import json
 import numpy as np
 from models.van_laar import VanLaarModel
 from models.wilson import WilsonModel
-from utils.plot import generate_compositions, compute_gammas, save_to_csv, plot_ternary_surface, plot_activity_surface
+from utils.plot import generate_compositions, compute_gammas, save_to_csv, plot_ternary_surface, plot_activity_surface, plot_combined_ternary
 
 def load_params():
     """
@@ -39,6 +39,7 @@ def choose_model():
     print("2. Wilson")
     print("3. NRTL (coming soon)")
     print("4. UNIQUAC (coming soon)")
+    print("5. All Modesls (Coming Soon)")
     return input("Enter number: ")
 
 
@@ -83,7 +84,7 @@ def main():
         print(f"γ{i} = {g:.4f}")
 
     # Generate a grid of compositions
-    compositions = generate_compositions(len(x), points=20)
+    compositions = generate_compositions(len(x), points=30)
 
     # Compute gamma values for grid
     gammas = compute_gammas(model, compositions)
@@ -97,9 +98,17 @@ def main():
     #     for i in range(3):
     #         plot_ternary_surface(compositions, gammas, component_index=i)
 
-    # Works for binary and ternary automatically
-    for i in range(len(x)):
-        plot_activity_surface(compositions, gammas, component_index=i)
+    # # Works for binary and ternary automatically
+    # for i in range(len(x)):
+    #     plot_activity_surface(compositions, gammas, component_index=i)
+
+
+    if len(x) == 3:
+        plot_combined_ternary(compositions, gammas)
+    else:
+        for i in range(len(x)):
+            plot_activity_surface(compositions, gammas, component_index=i)
+
 
 
 
