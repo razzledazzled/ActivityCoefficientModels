@@ -94,7 +94,7 @@ def main():
         "1": ("Van_Laar", VanLaarModel),
         "2": ("Wilson", WilsonModel),
         "3": ("NRTL", NRTLModel),
-        "4": ("UNIQAUC", UNIQUACModel),
+        "4": ("UNIQUAC", UNIQUACModel),
     }
 
     # Build list of models to run
