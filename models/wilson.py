@@ -13,17 +13,23 @@ class WilsonModel(BaseModel):
         self.Lambda = params["Lambda"]  # no splitting needed
 
     def gamma(self, x):
-        import numpy as np
-        x = np.array(x)
+        x = np.array(x, dtype=float)
+        eps = 1e-12
+        x = np.clip(x, eps, 1.0)
+        x /= np.sum(x)
+
         N = len(x)
         gamma = np.zeros(N)
 
+        # Precompute denominators for efficiency
+        denom = np.zeros((N,))
+        for j in range(N):
+            denom[j] = max(sum(x[k] * self.Lambda.get((k+1,j+1), 1.0) for k in range(N)), eps)
+
         for i in range(N):
-            sum_xL_ji = sum(x[j] * self.Lambda.get((j+1, i+1), 1.0) for j in range(N))
-            second_term = sum(
-                x[j] * self.Lambda.get((i+1, j+1), 1.0) /
-                sum(x[k] * self.Lambda.get((k+1, j+1), 1.0) for k in range(N))
-                for j in range(N)
-            )
+            sum_xL_ji = max(sum(x[j] * self.Lambda.get((j+1, i+1), 1.0) for j in range(N)), eps)
+            second_term = sum(x[j] * self.Lambda.get((i+1, j+1), 1.0) / denom[j] for j in range(N))
             gamma[i] = np.exp(1 - np.log(sum_xL_ji) - second_term)
+
         return gamma
+
