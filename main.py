@@ -24,10 +24,10 @@ def load_params():
     converted = {}
 
     # Van Laar
-    if "Van Laar" in raw:
+    if "Van_Laar" in raw:
         A = {(int(i), int(j)): v for (i, j), v in 
-             ((k.split(","), v) for k, v in raw["Van Laar"]["A"].items())}
-        converted["Van Laar"] = {"A": A}
+             ((k.split(","), v) for k, v in raw["Van_Laar"]["A"].items())}
+        converted["Van_Laar"] = {"A": A}
 
     # Wilson
     if "Wilson" in raw:
@@ -91,7 +91,7 @@ def main():
 
     # Map choices to model constructors
     model_map = {
-        "1": ("Van Laar", VanLaarModel),
+        "1": ("Van_Laar", VanLaarModel),
         "2": ("Wilson", WilsonModel),
         "3": ("NRTL", NRTLModel),
         "4": ("UNIQAUC", UNIQUACModel),
@@ -103,7 +103,7 @@ def main():
         models_to_run = [(name, cls(params[name]))]
     elif choice == "5":
         models_to_run = [
-            ("Van Laar", VanLaarModel(params["Van Laar"])),
+            ("Van_Laar", VanLaarModel(params["Van_Laar"])),
             ("Wilson", WilsonModel(params["Wilson"])),
             ("NRTL", NRTLModel(params["NRTL"])),
             ("UNIQUAC", UNIQUACModel(params["UNIQUAC"])),
