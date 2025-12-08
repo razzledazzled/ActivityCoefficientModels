@@ -1,7 +1,7 @@
 # models/van_laar.py
 
 import numpy as np
-from models.base_model import BaseModel
+from .base_model import BaseModel
 
 class VanLaarModel(BaseModel):
     """
@@ -13,42 +13,40 @@ class VanLaarModel(BaseModel):
 
     def gamma(self, x, epsilon=1e-12):
         """
-        Compute activity coefficients for any number of components safely.
+        Compute activity coefficients for N-component mixtures using Van Laar model.
         
         x: list or array of mole fractions, length N
         epsilon: small value to avoid division by zero
         
         Returns: array of gamma values
         """
-        x = np.array(x)
+        x = np.array(x, dtype=float)
+        x /= np.sum(x)  # ensure mole fractions sum to 1
         N = len(x)
         A = self.params["A"]  # {(i,j): value} with integer tuples
 
-        gamma = np.zeros(N)
+        ln_gamma = np.zeros(N)
 
         for i in range(N):
             sum_terms = 0.0
 
             for j in range(N):
                 if j == i:
-                    continue
+                    continue  # skip self-interaction
 
-                # Access pairwise parameters
+                # pairwise Van Laar parameters
                 try:
                     Aij = A[(i+1, j+1)]
                     Aji = A[(j+1, i+1)]
                 except KeyError:
                     raise KeyError(f"Missing Van Laar parameter for pair ({i+1},{j+1})")
 
-                # Compute denominator safely
-                denom = sum(A[(k+1, j+1)] * x[k] for k in range(N) if k != j)
-                if denom < epsilon:
-                    denom = epsilon  # prevent division by zero
+                # denominator sum over k != j
+                denom = sum(A.get((k+1, j+1), 0.0) * x[k] for k in range(N) if k != j)
+                denom = max(denom, epsilon)  # avoid division by zero
 
-                # Add term to gamma sum
-                sum_terms += Aij * ((Aji * x[j]) / denom) ** 2
+                sum_terms += Aij * (Aji * x[j] / denom)
 
-            # Compute gamma[i]
-            gamma[i] = np.exp(sum_terms)
+            ln_gamma[i] = sum_terms
 
-        return gamma
+        return np.exp(ln_gamma)
