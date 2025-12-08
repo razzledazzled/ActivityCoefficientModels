@@ -12,7 +12,8 @@ from utils.plot import (
     save_to_csv,
     plot_activity_surface,
     plot_combined_binary,
-    plot_combined_ternary
+    plot_combined_ternary,
+    plot_combined_ternary_with_contours
 )
 
 
@@ -135,6 +136,7 @@ def main():
         if len(x) == 3:
         # Ternary → one combined 3D plot
             plot_combined_ternary(compositions, gammas, model_name=model_name)
+            # plot_combined_ternary_with_contours(compositions, gammas, model_name=model_name)
 
         elif len(x) == 2:
         # Binary → one combined 2D plot
