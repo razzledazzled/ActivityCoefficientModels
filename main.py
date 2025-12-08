@@ -24,32 +24,32 @@ def load_params():
     converted = {}
 
     # Van Laar
-    if "van_laar" in raw:
+    if "Van Laar" in raw:
         A = {(int(i), int(j)): v for (i, j), v in 
-             ((k.split(","), v) for k, v in raw["van_laar"]["A"].items())}
-        converted["van_laar"] = {"A": A}
+             ((k.split(","), v) for k, v in raw["Van Laar"]["A"].items())}
+        converted["Van Laar"] = {"A": A}
 
     # Wilson
-    if "wilson" in raw:
+    if "Wilson" in raw:
         Lambda = {(int(i), int(j)): v for (i, j), v in 
-                  ((k.split(","), v) for k, v in raw["wilson"]["Lambda"].items())}
-        converted["wilson"] = {"Lambda": Lambda}
+                  ((k.split(","), v) for k, v in raw["Wilson"]["Lambda"].items())}
+        converted["Wilson"] = {"Lambda": Lambda}
 
     # NRTL
-    if "nrtl" in raw:
+    if "NRTL" in raw:
         tau = {(int(i), int(j)): v for (i, j), v in 
-               ((k.split(","), v) for k, v in raw["nrtl"]["tau"].items())}
+               ((k.split(","), v) for k, v in raw["NRTL"]["tau"].items())}
         alpha = {(int(i), int(j)): v for (i, j), v in 
-                 ((k.split(","), v) for k, v in raw["nrtl"]["alpha"].items())}
-        converted["nrtl"] = {"tau": tau, "alpha": alpha}
+                 ((k.split(","), v) for k, v in raw["NRTL"]["alpha"].items())}
+        converted["NRTL"] = {"tau": tau, "alpha": alpha}
 
     # UNIQUAC
-    if "uniquac" in raw:
-        r = {int(k): v for k, v in raw["uniquac"]["r"].items()}
-        q = {int(k): v for k, v in raw["uniquac"]["q"].items()}
+    if "UNIQUAC" in raw:
+        r = {int(k): v for k, v in raw["UNIQUAC"]["r"].items()}
+        q = {int(k): v for k, v in raw["UNIQUAC"]["q"].items()}
         a = {(int(i), int(j)): v for (i, j), v in 
-             ((k.split(","), v) for k, v in raw["uniquac"]["a"].items())}
-        converted["uniquac"] = {"r": r, "q": q, "a": a}
+             ((k.split(","), v) for k, v in raw["UNIQUAC"]["a"].items())}
+        converted["UNIQUAC"] = {"r": r, "q": q, "a": a}
 
     return converted
 
@@ -91,10 +91,10 @@ def main():
 
     # Map choices to model constructors
     model_map = {
-        "1": ("van_laar", VanLaarModel),
-        "2": ("wilson", WilsonModel),
-        "3": ("nrtl", NRTLModel),
-        "4": ("uniquac", UNIQUACModel),
+        "1": ("Van Laar", VanLaarModel),
+        "2": ("Wilson", WilsonModel),
+        "3": ("NRTL", NRTLModel),
+        "4": ("UNIQAUC", UNIQUACModel),
     }
 
     # Build list of models to run
@@ -103,10 +103,10 @@ def main():
         models_to_run = [(name, cls(params[name]))]
     elif choice == "5":
         models_to_run = [
-            ("van_laar", VanLaarModel(params["van_laar"])),
-            ("wilson", WilsonModel(params["wilson"])),
-            ("nrtl", NRTLModel(params["nrtl"])),
-            ("uniquac", UNIQUACModel(params["uniquac"])),
+            ("Van Laar", VanLaarModel(params["Van Laar"])),
+            ("Wilson", WilsonModel(params["Wilson"])),
+            ("NRTL", NRTLModel(params["NRTL"])),
+            ("UNIQUAC", UNIQUACModel(params["UNIQUAC"])),
         ]
     else:
         print("Invalid choice.")
