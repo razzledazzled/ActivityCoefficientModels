@@ -25,11 +25,11 @@ def load_params():
 
     converted = {}
 
-    # Van Laar
-    if "Van_Laar" in raw:
+    # Van Laar Differential
+    if "Van_Laar_Diff" in raw:
         A = {(int(i), int(j)): v for (i, j), v in 
-             ((k.split(","), v) for k, v in raw["Van_Laar"]["A"].items())}
-        converted["Van_Laar"] = {"A": A}
+            ((k.split(","), v) for k, v in raw["Van_Laar_Diff"]["A"].items())}
+        converted["Van_Laar_Diff"] = {"A": A}
 
     # Wilson
     if "Wilson" in raw:
@@ -53,25 +53,17 @@ def load_params():
              ((k.split(","), v) for k, v in raw["UNIQUAC"]["a"].items())}
         converted["UNIQUAC"] = {"r": r, "q": q, "a": a}
 
-    # Van Laar Differential
-    if "Van_Laar_Diff" in raw:
-        A = {(int(i), int(j)): v for (i, j), v in 
-            ((k.split(","), v) for k, v in raw["Van_Laar_Diff"]["A"].items())}
-        converted["Van_Laar_Diff"] = {"A": A}
-
-
     return converted
 
 
 # ---------- Menus ----------
 def choose_model():
     print("Choose activity coefficient model:")
-    print("1. Van Laar")
+    print("1. Van Laar Diff")
     print("2. Wilson")
     print("3. NRTL")
     print("4. UNIQUAC")
     print("5. All Models")
-    print("6. Van Laar Diff")
     return input("Enter number: ")
 
 
@@ -101,11 +93,10 @@ def main():
 
     # Map choices to model constructors
     model_map = {
-        "1": ("Van_Laar", VanLaarModel),
+        "1": ("Van_Laar_Diff", VanLaarDifferentialModel),
         "2": ("Wilson", WilsonModel),
         "3": ("NRTL", NRTLModel),
         "4": ("UNIQUAC", UNIQUACModel),
-        "6": ("Van_Laar_Diff", VanLaarDifferentialModel),
     }
 
     # Build list of models to run
@@ -114,11 +105,10 @@ def main():
         models_to_run = [(name, cls(params[name]))]
     elif choice == "5":
         models_to_run = [
-            ("Van_Laar", VanLaarModel(params["Van_Laar"])),
+            ("Van_Laar_Diff", VanLaarDifferentialModel(params["Van_Laar_Diff"])),
             ("Wilson", WilsonModel(params["Wilson"])),
             ("NRTL", NRTLModel(params["NRTL"])),
             ("UNIQUAC", UNIQUACModel(params["UNIQUAC"])),
-            ("Van_Laar_Diff", VanLaarDifferentialModel(params["Van_Laar_Diff"])),
         ]
     else:
         print("Invalid choice.")
