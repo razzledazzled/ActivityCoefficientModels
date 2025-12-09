@@ -3,6 +3,7 @@
 import json
 import numpy as np
 from models.van_laar import VanLaarModel
+from models.van_laar_diff_model import VanLaarDifferentialModel
 from models.wilson import WilsonModel
 from models.nrtl import NRTLModel
 from models.uniquac import UNIQUACModel
@@ -52,6 +53,13 @@ def load_params():
              ((k.split(","), v) for k, v in raw["UNIQUAC"]["a"].items())}
         converted["UNIQUAC"] = {"r": r, "q": q, "a": a}
 
+    # Van Laar Differential
+    if "Van_Laar_Diff" in raw:
+        A = {(int(i), int(j)): v for (i, j), v in 
+            ((k.split(","), v) for k, v in raw["Van_Laar_Diff"]["A"].items())}
+        converted["Van_Laar_Diff"] = {"A": A}
+
+
     return converted
 
 
@@ -63,6 +71,7 @@ def choose_model():
     print("3. NRTL")
     print("4. UNIQUAC")
     print("5. All Models")
+    print("6. Van Laar Diff")
     return input("Enter number: ")
 
 
@@ -96,6 +105,7 @@ def main():
         "2": ("Wilson", WilsonModel),
         "3": ("NRTL", NRTLModel),
         "4": ("UNIQUAC", UNIQUACModel),
+        "6": ("Van_Laar_Diff", VanLaarDifferentialModel),
     }
 
     # Build list of models to run
@@ -108,6 +118,7 @@ def main():
             ("Wilson", WilsonModel(params["Wilson"])),
             ("NRTL", NRTLModel(params["NRTL"])),
             ("UNIQUAC", UNIQUACModel(params["UNIQUAC"])),
+            ("Van_Laar_Diff", VanLaarDifferentialModel(params["Van_Laar_Diff"])),
         ]
     else:
         print("Invalid choice.")

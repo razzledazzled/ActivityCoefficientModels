@@ -107,5 +107,17 @@ class UNIQUACModel(BaseModel):
         # ln(gamma) = combinatorial + residual
         ln_gamma = ln_gamma_comb + ln_gamma_res
 
+
+        # ---------- DEBUG OUTPUT ----------
+        # print("phi:", phi)
+        # print("theta:", theta)
+        # print("tau matrix:\n", tau)
+        # print("denom:", denom)
+        # print("ln_gamma_comb:", ln_gamma_comb)
+        # print("ln_gamma_res:", ln_gamma_res)
+        # print("ln_gamma_total:", ln_gamma)
+        # print("gamma:", np.exp(ln_gamma))
+
+
         # Convert from ln(gamma) to gamma
         return np.exp(ln_gamma)

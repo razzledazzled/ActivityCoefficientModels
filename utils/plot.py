@@ -55,7 +55,7 @@ def prepare_plot_values(gammas):
     # If range is wide (>10×), use log scale
     if gmax / max(gmin, 1e-12) > 10:
         plot_values = np.log10(gam)
-        color_label = "log10(γ)"
+        color_label = "γ"   # changed here
         is_log = True
     else:
         plot_values = gam
